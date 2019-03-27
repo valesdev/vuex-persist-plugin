@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import cloneDeep from 'lodash.clonedeep'
 
-export default function ({ modules }) {
+export default function vuexPersistPlugin ({ modules }) {
   modules || (modules = [])
 
   const restore = (moduleName, store) => {
