@@ -1,12 +1,15 @@
 import Vuex from 'vuex'
 import cloneDeep from 'lodash.clonedeep'
 
-export default function vuexPersistPlugin ({ modules }) {
+export default function vuexPersistPlugin ({
+  modules,
+  storageKeyPrefix = 'store/'
+}) {
   modules || (modules = [])
 
   const restore = (moduleName, store) => {
     const state = cloneDeep(store.state)
-    const stateForModule = JSON.parse(window.localStorage.getItem(`store/${moduleName}`))
+    const stateForModule = JSON.parse(window.localStorage.getItem(`${storageKeyPrefix}${moduleName}`))
     if (stateForModule) {
       state[moduleName] = stateForModule
       store.replaceState(state)
@@ -31,7 +34,7 @@ export default function vuexPersistPlugin ({ modules }) {
       // persist state
       modules.forEach(moduleName => {
         if (moduleName in state && state[moduleName]) {
-          window.localStorage.setItem(`store/${moduleName}`, JSON.stringify(state[moduleName]))
+          window.localStorage.setItem(`${storageKeyPrefix}${moduleName}`, JSON.stringify(state[moduleName]))
         }
       })
     })
