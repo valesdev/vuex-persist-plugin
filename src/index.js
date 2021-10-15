@@ -8,6 +8,7 @@ export default function vuexPersistPlugin ({
   modules || (modules = [])
 
   const restore = (moduleName, store) => {
+    // restore module state from localStorage
     const state = cloneDeep(store.state)
     const stateForModule = JSON.parse(window.localStorage.getItem(`${storageKeyPrefix}${moduleName}`))
     if (stateForModule) {
@@ -17,11 +18,15 @@ export default function vuexPersistPlugin ({
   }
 
   return function (store) {
-    // inject registerModule to restore state
-    const registerModule = Vuex.Store.prototype.registerModule
+    // inject `registerModule` to restore state
+    const registerModuleOld = Vuex.Store.prototype.registerModule
     Vuex.Store.prototype.registerModule = function () {
-      registerModule.apply(this, arguments)
-      restore(arguments[0], store)
+      registerModuleOld.apply(this, arguments)
+
+      // restore state from localStorage after module registration
+      if (modules.indexOf(arguments[0]) !== -1) {
+        restore(arguments[0], store);
+      }
     }
 
     // restore state
