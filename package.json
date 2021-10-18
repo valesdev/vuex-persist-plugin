@@ -1,6 +1,6 @@
 {
   "name": "vuex-persist-plugin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Persist and restore the Vuex state between browser reloads.",
   "main": "dist/vuex-persist-plugin.es.js",
   "scripts": {

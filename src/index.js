@@ -20,12 +20,13 @@ export default function vuexPersistPlugin ({
   return function (store) {
     // inject `registerModule` to restore state
     const registerModuleOld = Vuex.Store.prototype.registerModule
-    Vuex.Store.prototype.registerModule = function () {
-      registerModuleOld.apply(this, arguments)
+    Vuex.Store.prototype.registerModule = function (path, rawModule, options) {
+      registerModuleOld.apply(this, [path, rawModule, options])
 
       // restore state from localStorage after module registration
-      if (modules.indexOf(arguments[0]) !== -1) {
-        restore(arguments[0], store);
+      const moduleName = typeof path === 'string' ? path : path.join('/')
+      if (modules.indexOf(moduleName) !== -1) {
+        restore(moduleName, store);
       }
     }
 
